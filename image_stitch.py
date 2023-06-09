@@ -137,8 +137,8 @@ def stitch_images(directory, output, fill, reduce, verbose, colorkey, process_co
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--dir_path', default='./', help="The directory containing the images.")
-	parser.add_argument('--out_file', default='output.png', help="The output file name.")
+	parser.add_argument('--dir-path', default='./', help="The directory containing the images.")
+	parser.add_argument('--out-file', default='output.png', help="The output file name.")
 	parser.add_argument('--fill', default=None, help="An optional fill image.")
 	parser.add_argument('--reduce', action='store_true', help="Use pngquant to reduce the output file size.")
 	parser.add_argument('--verbose', action='store_true', help="Print verbose output.")
