@@ -1,9 +1,6 @@
 """
 @file
-@brief Stitch Images Script
-@details This script stitches together a set of images into a grid and saves the result as an output image file.
-@version 1.0
-@date 2023-06-09
+@copyright 2023
 @author Sovexe (https://github.com/Sovexe)
 @license ISC
 """
