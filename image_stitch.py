@@ -92,10 +92,10 @@ def stitch_images(directory, output, fill, reduce, verbose, colorkey, process_co
 
     result = Image.new('RGBA', (result_width, result_height))
 
+    # If a fill image is provided, open it and resize it to the cell size
     if fill:
         fill_image = Image.open(fill)
-        fill_image_resized = fill_image.resize((result_width, result_height))
-        result.paste(fill_image_resized, (0, 0))
+        fill_image_resized = fill_image.resize((cell_size, cell_size))
 
     for i, img_file in enumerate(image_files):
         x_pos = (i % grid_cols) * cell_size
@@ -114,21 +114,14 @@ def stitch_images(directory, output, fill, reduce, verbose, colorkey, process_co
                     else:
                         new_data.append(item)
                 img.putdata(new_data)
-                
-            # Create a new image to hold the fill image combined with the current image
-            combined_img = Image.new('RGBA', (cell_size, cell_size))
 
+            # If a fill image was provided, paste it onto the result image
             if fill:
-                # Paste the resized fill image onto the new image
-                fill_image_resized = fill_image.resize((cell_size, cell_size))
-                combined_img.paste(fill_image_resized, (0, 0))
+                result.paste(fill_image_resized, (x_pos, y_pos))
+            # Paste the individual image onto the result image
+            result.paste(img, (x_pos, y_pos), mask=img)
 
-            # Paste the current image onto the new image, using it as a mask
-            # This ensures transparency in the current image shows the fill image
-            combined_img.paste(img, (0, 0), img)
-
-            # Paste the combined image onto the result image
-            result.paste(combined_img, (x_pos, y_pos))
+    os.makedirs(os.path.dirname(output), exist_ok=True)
 
     temp_file = "temp.png"
     result.save(temp_file, "PNG")
@@ -152,12 +145,17 @@ if __name__ == "__main__":
     parser.add_argument('--fill', default=None, help="An optional fill image.")
     parser.add_argument('--reduce', action='store_true', help="Use pngquant to reduce the output file size.")
     parser.add_argument('--verbose', action='store_true', help="Print verbose output.")
-    parser.add_argument('--colorkey', type=int, nargs=3, metavar=('R', 'G', 'B'), default=[255, 0, 228], help="Specify the RGB color key. Default: 255 0 228")
-    parser.add_argument('--process-colorkey', action='store_true', help="Process the color key to make pixels transparent.")
-    parser.add_argument('--grid-rows', type=int, default=10, help="The number of rows in the grid. Default: 10")
-    parser.add_argument('--grid-cols', type=int, default=10, help="The number of columns in the grid. Default: 10")
-    args = parser.parse_args()
+    parser.add_argument('--colorkey', type=int, nargs=3,
+                        metavar=('R', 'G', 'B'), default=[255, 0, 228],
+                        help="Specify the RGB color key. Default: 255 0 228")
+    parser.add_argument('--process-colorkey', action='store_true',
+                        help="Flag to indicate whether to process the color key.")
+    parser.add_argument('--grid-rows', type=int, default=10,
+                        help="The number of rows in the grid. Default: 10")
+    parser.add_argument('--grid-cols', type=int, default=10,
+                        help="The number of columns in the grid. Default: 10")
 
-    output_path = os.path.abspath(os.path.join(args.dir_path, 'output', args.out_file))
+    args = parser.parse_args()
+    output_path = os.path.join(os.path.dirname(__file__), args.out_file)
 
     stitch_images(args.dir_path, output_path, args.fill, args.reduce, args.verbose, args.colorkey, args.process_colorkey, args.grid_rows, args.grid_cols)
