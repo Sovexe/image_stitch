@@ -9,8 +9,8 @@ An image stitcher script that stitches together a set of images into a grid and 
 ## Usage
 
 ### Arguments
-- `--dir_path`: The directory containing the images. (Default: `./`)
-- `--out_file`: The output file name. (Default: `output.png`)
+- `--dir-path`: The directory containing the images. (Default: `./`)
+- `--out-file`: The output file name. (Default: `output.png`)
 - `--fill`: An optional fill image. (Default: None)
 - `--reduce`: Use `pngquant` to reduce the output file size.
 - `--verbose`: Print verbose output.
