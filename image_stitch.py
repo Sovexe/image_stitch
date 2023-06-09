@@ -31,21 +31,6 @@ Note: When using the `--reduce` option, the script relies on the availability of
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-def lazy_open_image(filename):
-	"""
-	Lazily opens an image file.
-
-	Args:
-		filename (str): The filename of the image.
-
-	Yields:
-		Image: The opened image object.
-
-	"""
-	with open(filename, 'rb') as f:
-		with Image.open(f) as image:
-			yield image
-
 def stitch_images(directory, output, fill, reduce, verbose, colorkey, process_colorkey, grid_rows, grid_cols):
 	"""
 	Stitches images together into a grid and saves the result as an output image file.
@@ -100,7 +85,7 @@ def stitch_images(directory, output, fill, reduce, verbose, colorkey, process_co
 		if verbose:
 			print(f"Pasting {img_file} at position ({x_pos}, {y_pos})")
 
-		for img in lazy_open_image(img_file):
+		with Image.open(img_file) as img:
 			img = img.convert("RGBA")  # Ensure all images are in RGBA format
 			if process_colorkey and colorkey:
 				data = img.getdata()
