@@ -101,8 +101,8 @@ def stitch_images(directory, output, fill, reduce, verbose, colorkey, process_co
 			print(f"Pasting {img_file} at position ({x_pos}, {y_pos})")
 
 		for img in lazy_open_image(img_file):
+			img = img.convert("RGBA")  # Ensure all images are in RGBA format
 			if process_colorkey and colorkey:
-				img = img.convert("RGBA")
 				data = img.getdata()
 				new_data = []
 				for item in data:
@@ -112,11 +112,9 @@ def stitch_images(directory, output, fill, reduce, verbose, colorkey, process_co
 						new_data.append(item)
 				img.putdata(new_data)
 
-			# If a fill image was provided, paste it onto the result image
 			if fill:
 				result.paste(fill_image_resized, (x_pos, y_pos))
-			# Paste the individual image onto the result image
-			result.paste(img, (x_pos, y_pos), mask=img)
+			result.paste(img, (x_pos, y_pos), mask=img.split()[3])  # Use the alpha channel as mask
 
 	os.makedirs(os.path.dirname(output), exist_ok=True)
 
