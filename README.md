@@ -1,4 +1,4 @@
-# Image Stitcher
+# Image Stitch
 An image stitcher script that stitches together a set of images into a grid and saves the result as an output image file. The script also provides the ability to use a fill image that fills in all parts of the output made transparent by a specified color key.
 
 ## Requirements
@@ -21,7 +21,7 @@ An image stitcher script that stitches together a set of images into a grid and 
 
 ### Example Command
 ```
-python mapstitch.py --dir_path ./images --out_file result.png --fill fill.png --reduce --verbose --colorkey 255 0 228 --process-colorkey --grid-rows 10 --grid-cols 10
+python mapstitch.py --dir-path ./images --out-file result.png --fill fill.png --reduce --verbose --colorkey 255 0 228 --process-colorkey --grid-rows 10 --grid-cols 10
 ```
 This command takes all PNG images in the `./images` directory, stitches them into a 10x10 grid, processes the color key `255 0 228` to make those pixels transparent, uses `fill.png` as the fill image for transparent pixels, reduces the output file size with `pngquant`, and saves the result as `result.png` in the `./output` directory.
 
